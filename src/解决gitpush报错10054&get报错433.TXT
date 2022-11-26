@@ -7,3 +7,9 @@ git config --global http.sslVerify "false"
 it config lfs.https://github.com/nezumimrx/ESP32_REMOTE_TFT_OID.git/info/lfs.locksverify false
 
 git push -u origin main
+
+解决 get报错 433
+
+git config --global http.proxy http://127.0.0.1:10809
+
+这个10809要在连上vpn后在网络设置，代理面板查看
