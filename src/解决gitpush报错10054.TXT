@@ -1,0 +1,9 @@
+解决push报错 10054
+
+git config http.postBuffer 524288000
+
+git config --global http.sslVerify "false"
+
+it config lfs.https://github.com/nezumimrx/ESP32_REMOTE_TFT_OID.git/info/lfs.locksverify false
+
+git push -u origin main
