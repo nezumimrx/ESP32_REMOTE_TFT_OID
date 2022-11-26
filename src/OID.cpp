@@ -13,9 +13,12 @@ OID 型号目前是 松翰科技的 SNM9S5xxxC2100A 系列
 #define oid_sdio    GPIO_NUM_5
 
 int OID_X =0,OID_Y =0,OID_Angle=0;
+int OID_Index=0;
 int temp_X[3],temp_Y[3],temp_Angle[3];
+int temp_index[10];
 uint8_t temp_debounce=0;
 boolean OID_available=false;
+boolean OID_code_type=0;//1-手写码 2-普通码
 
 static uint16_t TranCommand;
 static uint8_t Muti_Write_Flg;
@@ -365,12 +368,32 @@ void OID_Init(){
   if(OID_TransmitCmd(UserCmd_OutputAngleEnable)==0)Serial.println("angle ok!");
 }
 
+int mostFrequent(int* arr, int n)
+{
+    int maxcount = 0;
+    int element_having_max_freq;
+    for (int i = 0; i < n; i++) {
+        int count = 0;
+        for (int j = 0; j < n; j++) {
+            if (arr[i] == arr[j])
+                count++;
+        }
+ 
+        if (count > maxcount) {
+            maxcount = count;
+            element_having_max_freq = arr[i];
+        }
+    }
+ 
+    return element_having_max_freq;
+}
+
 void OID_scan(){
   unsigned int OID_Receive[4];
   String result = "";
   if(OID_CheckReadData()==0){
     if(OID_ReceiveData(OID_Receive)==0){
-      if((OID_Receive[0]&0xB000)==0x2000){
+      if((OID_Receive[0]&0xB000)==0x2000){//是手写码
         temp_X[temp_debounce] = OID_Receive[3]&0x3FFF;
         temp_Y[temp_debounce] = (((OID_Receive[2]<<2)+(OID_Receive[3]>>14))&0x3FFF);
         temp_Angle[temp_debounce] = (((OID_Receive[0]<<3)+(OID_Receive[1]>>13))&0x1FF);
@@ -379,23 +402,48 @@ void OID_scan(){
         temp_debounce++;
         if(temp_debounce>=2){
           if((temp_X[0]==temp_X[1]==temp_X[2])&&(temp_Y[0]==temp_Y[1]==temp_Y[2])){
-            if((temp_X[0]-OID_X>500)||(temp_Y[0]-OID_Y>500)){
+            if((abs(temp_X[0]-OID_X)>500)||(abs(temp_Y[0]-OID_Y)>500)){
               OID_available=false;
+              OID_code_type=0;//无效码
               temp_debounce=0;
             }else{
               OID_X=temp_X[0];
               OID_Y=temp_Y[0];
               OID_Angle=(360-temp_Angle[0]);
               OID_available=true;
+              OID_code_type=1;//手写码
             }
           }else {
             OID_available=false;
+            OID_code_type=0;//无效码
           }
           temp_debounce=0;
         }
-      }else {OID_available=false;}
-    }else {OID_available=false;}
-  }else {OID_available=false;}
+      }else if((OID_Receive[0]&0xB000)==0x0000){//是普通码 这个滤波仍然有问题，还不能100%捕捉到数据
+        temp_index[temp_debounce] =OID_Receive[3]&0x3FFF;
+        if(temp_debounce<9){
+          temp_debounce++;
+        }else if(temp_debounce==9){//10次捕获数据之后
+          int most_freq_index=mostFrequent(temp_index,10);//得到最常出现的那个数据
+          if(OID_Index==0){//如果之前没有捕获过数据，那么先记录这个数据
+            OID_available=true;
+            OID_code_type=2;//普通码
+            OID_Index=most_freq_index;
+          }else{
+            if(most_freq_index<12000&&most_freq_index!=0){//如果最常出现的数据<12000且有效数据不为0
+              OID_available=true;
+              OID_code_type=2;//普通码
+              OID_Index=most_freq_index;
+            }else{
+              OID_available=false;
+              OID_code_type=0;
+            }
+          }
+          temp_debounce=0;
+        }
+      }else {OID_available=false;}//这是对于收到错误的数据而言
+    }else {OID_available=false;}//对于没有收到数据而言
+  }else {OID_available=false;}//对于没有收到数据而言
   
   
 }

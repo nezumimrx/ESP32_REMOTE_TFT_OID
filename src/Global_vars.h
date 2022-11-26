@@ -12,5 +12,6 @@ extern int OID_X;
 extern int OID_Y;
 extern int OID_Angle;
 extern boolean OID_available;
-
+extern int OID_Index;
+extern int OID_code_type;
 

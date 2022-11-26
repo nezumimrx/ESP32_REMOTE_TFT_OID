@@ -214,14 +214,23 @@ void pwm_calculate_movement(int target_x,int target_y,int current_x,int current_
 
 void pwm_oid_reposition(int target_x,int target_y,int target_angle,int MotorSpeed){
     if(OID_available){//数据是否有效
-        if(OID_X!=0){
-            if(OID_Y!=0){
-                if(OID_Angle!=0){
-                    Serial.print("X: ");Serial.print(OID_X);Serial.print(" Y: ");Serial.print(OID_Y);Serial.print(" Angle: ");Serial.println(OID_Angle);
-                    pwm_calculate_movement(target_x,target_y,OID_X,OID_Y,OID_Angle,target_angle,MotorSpeed);
+        if(OID_code_type==1)//是手写码
+        {
 
+
+            if(OID_X!=0){
+                if(OID_Y!=0){
+                    if(OID_Angle!=0){
+                        Serial.print("X: ");Serial.print(OID_X);Serial.print(" Y: ");Serial.print(OID_Y);Serial.print(" Angle: ");Serial.println(OID_Angle);
+                        pwm_calculate_movement(target_x,target_y,OID_X,OID_Y,OID_Angle,target_angle,MotorSpeed);
+
+                    }
                 }
             }
+
+
+        }else if(OID_code_type==2){
+            Serial.print("OID_Index : ");Serial.println(OID_Index);
         }  
     }
 }
