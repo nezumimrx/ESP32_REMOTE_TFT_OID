@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "ESP32_REMOTE_TFT_OID",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"cmath": "cpp"
+		}
+	}
+}

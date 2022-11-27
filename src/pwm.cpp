@@ -44,7 +44,8 @@ const int pwm_freq = 1000; // 1000hz
 // PWM分辨率，取值为 0-20 之间，这里填写为8，对应后面ledcWrite填写的值
 // 这个里面填写的pwm值就在 0 - 2的8次方 之间 也就是 0-255
 uint8_t pwm_res = 8;//PWM精度，2的8次方，8就是0-255如果是10就是0-1024
-
+int angle_tolerance=10;//reposition的时候角度容差，和目标夹角范围小于10度就行了
+int distance_tolerance=20;//reposition的时候距离容差范围，距离目标定位2cm就行了
 
 
 void pwm_init()
@@ -167,11 +168,11 @@ void pwm_calculate_movement(int target_x,int target_y,int current_x,int current_
         }
         Serial.print("Should turn to Angle: ");Serial.println(target_Angle);
         Serial.print("Distance to go: ");Serial.println(distance);
-        if(distance>=15){
+        if(distance>=distance_tolerance){
             int delta_Angle=(current_angle-target_Angle);
             if((current_angle>=355&&current_angle<=360&&target_Angle<=5&&target_Angle>=0)||(target_Angle>=355&&target_Angle<=360&&current_angle<=5&&current_angle>=0)){
                 Serial.println("around 360/0 degree move forward");
-            }else if(abs(delta_Angle)>=10){
+            }else if(abs(delta_Angle)>=angle_tolerance){
                 if(delta_Angle<0&&abs(delta_Angle)>=180){
                     Serial.println("move left");
                     pwm_rotate_left(MotorSpeed);
@@ -182,15 +183,15 @@ void pwm_calculate_movement(int target_x,int target_y,int current_x,int current_
                 }else if(delta_Angle>0&&abs(delta_Angle)<180){
                     pwm_rotate_left(MotorSpeed);
                 }
-            }else if(abs(delta_Angle)<10){
+            }else if(abs(delta_Angle)<angle_tolerance){
                 Serial.println("just go forward");
                 pwm_forward(MotorSpeed);
             }
-        }else if(distance<=15){
+        }else if(distance<=distance_tolerance){
             int delta_Angle = (current_angle-inposition_target_angle);
             if((current_angle>=355&&current_angle<=360&&inposition_target_angle<=5&&inposition_target_angle>=0)||(inposition_target_angle>=355&&inposition_target_angle<=360&&current_angle<=5&&current_angle>=0)){
                 Serial.println("around 360/0 degree stop rotation");
-            }else if(abs(delta_Angle)>=10){
+            }else if(abs(delta_Angle)>=angle_tolerance){
                 if(delta_Angle<0&&abs(delta_Angle)>=180){
                     Serial.println("rotate left");
                     pwm_rotate_left(MotorSpeed);
@@ -204,7 +205,7 @@ void pwm_calculate_movement(int target_x,int target_y,int current_x,int current_
                     Serial.println("rotate left");
                     pwm_rotate_left(MotorSpeed);
                 }
-            }else if(abs(delta_Angle)<10){
+            }else if(abs(delta_Angle)<angle_tolerance){
                 Serial.println("stop rotation");
                 pwm_stop();
             }
@@ -214,24 +215,14 @@ void pwm_calculate_movement(int target_x,int target_y,int current_x,int current_
 
 void pwm_oid_reposition(int target_x,int target_y,int target_angle,int MotorSpeed){
     if(OID_available){//数据是否有效
-        if(OID_code_type==1)//是手写码
-        {
-
-
-            if(OID_X!=0){
-                if(OID_Y!=0){
-                    if(OID_Angle!=0){
-                        Serial.print("X: ");Serial.print(OID_X);Serial.print(" Y: ");Serial.print(OID_Y);Serial.print(" Angle: ");Serial.println(OID_Angle);
-                        pwm_calculate_movement(target_x,target_y,OID_X,OID_Y,OID_Angle,target_angle,MotorSpeed);
-
-                    }
+        if(OID_X!=0){
+            if(OID_Y!=0){
+                if(OID_Angle!=0){
+                    Serial.print("X: ");Serial.print(OID_X);Serial.print(" Y: ");Serial.print(OID_Y);Serial.print(" Angle: ");Serial.println(OID_Angle);
+                    pwm_calculate_movement(target_x,target_y,OID_X,OID_Y,OID_Angle,target_angle,MotorSpeed);
                 }
             }
-
-
-        }else if(OID_code_type==2){
-            Serial.print("OID_Index : ");Serial.println(OID_Index);
-        }  
+        }
     }
 }
 

@@ -15,10 +15,8 @@ OID 型号目前是 松翰科技的 SNM9S5xxxC2100A 系列
 int OID_X =0,OID_Y =0,OID_Angle=0;
 int OID_Index=0;
 int temp_X[3],temp_Y[3],temp_Angle[3];
-int temp_index[10];
 uint8_t temp_debounce=0;
 boolean OID_available=false;
-uint8_t OID_code_type=0;//1-手写码 2-普通码
 
 static uint16_t TranCommand;
 static uint8_t Muti_Write_Flg;
@@ -405,44 +403,15 @@ void OID_scan(){
           if((temp_X[0]==temp_X[1]==temp_X[2])&&(temp_Y[0]==temp_Y[1]==temp_Y[2])){
             if((abs(temp_X[0]-OID_X)>500)||(abs(temp_Y[0]-OID_Y)>500)){
               OID_available=false;
-              OID_code_type=0;//无效码
               temp_debounce=0;
             }else{
               OID_X=temp_X[0];
               OID_Y=temp_Y[0];
               OID_Angle=(360-temp_Angle[0]);
               OID_available=true;
-              OID_code_type=1;//手写码
             }
           }else {
             OID_available=false;
-            OID_code_type=0;//无效码
-          }
-          temp_debounce=0;
-        }
-      }else if((OID_Receive[0]&0xB000)==0x0000){//是普通码 这个滤波仍然有问题，还不能100%捕捉到数据
-        temp_index[temp_debounce] =OID_Receive[3]&0x3FFF;
-        if(temp_debounce<9){
-          if(temp_index[temp_debounce]>12000||temp_index[temp_debounce]==0){
-            temp_debounce=temp_debounce;
-          }else{
-            temp_debounce++;
-          }  
-        }else if(temp_debounce==9){//10次捕获数据之后
-          int most_freq_index=mostFrequent(temp_index,10);//得到最常出现的那个数据
-          if(OID_Index==0){//如果之前没有捕获过数据，那么先记录这个数据
-            OID_available=true;
-            OID_code_type=2;//普通码
-            OID_Index=most_freq_index;
-          }else{
-            if(most_freq_index<12000&&most_freq_index!=0){//如果最常出现的数据<12000且有效数据不为0
-              OID_available=true;
-              OID_code_type=2;//普通码
-              OID_Index=most_freq_index;
-            }else{
-              OID_available=false;
-              OID_code_type=0;
-            }
           }
           temp_debounce=0;
         }
