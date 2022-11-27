@@ -18,7 +18,7 @@ int temp_X[3],temp_Y[3],temp_Angle[3];
 int temp_index[10];
 uint8_t temp_debounce=0;
 boolean OID_available=false;
-boolean OID_code_type=0;//1-手写码 2-普通码
+uint8_t OID_code_type=0;//1-手写码 2-普通码
 
 static uint16_t TranCommand;
 static uint8_t Muti_Write_Flg;
@@ -397,6 +397,7 @@ void OID_scan(){
         temp_X[temp_debounce] = OID_Receive[3]&0x3FFF;
         temp_Y[temp_debounce] = (((OID_Receive[2]<<2)+(OID_Receive[3]>>14))&0x3FFF);
         temp_Angle[temp_debounce] = (((OID_Receive[0]<<3)+(OID_Receive[1]>>13))&0x1FF);
+        //Serial.println(temp_X[temp_debounce]);
         //Serial.print("temp_X: ");Serial.print(temp_X[temp_debounce]);Serial.print(" temp_Y: ");Serial.print(temp_Y[temp_debounce]);Serial.print(" temp_Angle: ");Serial.println(temp_Angle[temp_debounce]);
         if(temp_X[temp_debounce]>=15000||temp_Y[temp_debounce]>=15000){temp_X[temp_debounce]=0;temp_Y[temp_debounce]=0;}
         temp_debounce++;
@@ -422,7 +423,11 @@ void OID_scan(){
       }else if((OID_Receive[0]&0xB000)==0x0000){//是普通码 这个滤波仍然有问题，还不能100%捕捉到数据
         temp_index[temp_debounce] =OID_Receive[3]&0x3FFF;
         if(temp_debounce<9){
-          temp_debounce++;
+          if(temp_index[temp_debounce]>12000||temp_index[temp_debounce]==0){
+            temp_debounce=temp_debounce;
+          }else{
+            temp_debounce++;
+          }  
         }else if(temp_debounce==9){//10次捕获数据之后
           int most_freq_index=mostFrequent(temp_index,10);//得到最常出现的那个数据
           if(OID_Index==0){//如果之前没有捕获过数据，那么先记录这个数据
