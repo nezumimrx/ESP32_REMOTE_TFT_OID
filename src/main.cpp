@@ -43,12 +43,12 @@ void setup() {
   Serial.println("Sugar Eureka 20221117!");
   pwm_init();
   TFT_func_init();
-  OID_Init();
+  //OID_Init();
   volume_read_memory();//从pref里面读取语音预设
   espnow_slave_init();
-  xTaskCreate(OID_TASK,"OID_TASK",3000,NULL,1,&OID_TASK_Handle);
+  //xTaskCreate(OID_TASK,"OID_TASK",3000,NULL,1,&OID_TASK_Handle);
   xTaskCreate(TICK_TASK,"TICK_TASK",3000,NULL,1,NULL);
-  //xTaskCreate(TFT_TASK, "TFT_TASK", 10000, NULL, 1, &TFT_TASK_Handle);
+  xTaskCreate(TFT_TASK, "TFT_TASK", 10000, NULL, 1, &TFT_TASK_Handle);
 
 }
 
@@ -60,5 +60,5 @@ void loop() {
   }else if(connected_with_controller==false){
     lost_connection_funcs();
   }
-  pwm_oid_reposition(50,50,0,255);
+  //pwm_oid_reposition(50,50,0,255);
 }

@@ -23,7 +23,7 @@
 启用 #define TFT_RST   4  // Reset pin (could connect to RST pin)
 */
 
-unsigned char RowBmp128[2048];//
+unsigned char RowBmp128[9601];//
 TFT_eSPI tft = TFT_eSPI(); // Invoke library
 TFT_eSprite sprite = TFT_eSprite(&tft);
 File myFile;
@@ -34,9 +34,9 @@ void TFT_func_init()
 {
   tft.begin(); // Initialise the display
   tft.fillScreen(TFT_BLACK);
-  tft.setRotation(6);
-  tft.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
-  sprite.createSprite(128, 128);
+  //tft.setRotation(6);
+  //tft.drawXBitmap(2, 2, black_background, 128, 128, TFT_BLACK, TFT_BLACK);
+  sprite.createSprite(240, 320);
 
   pinMode(25, OUTPUT);
   digitalWrite(25, HIGH);
@@ -50,7 +50,7 @@ void TFT_func_init()
 void IRAM_ATTR DrawBmp(String name)
 {
   myFile = SPIFFS.open(name, "r");
-  // Serial.println(name);
+  //Serial.println(name);
   if (myFile)
   {
 
@@ -60,11 +60,13 @@ void IRAM_ATTR DrawBmp(String name)
       {
         myFile.read();
       }
-      for (int i = 0; i < 1408; i++)
+      //for (int i = 0; i < 1408; i++)//(128/8)*88
+      for (int i = 0; i < 9600; i++)//(240/8)*320
       {
         RowBmp128[i] = myFile.read();
       }
-      sprite.drawBitmap(0, 10, RowBmp128, 128, 88, TFT_WHITE, TFT_BLACK);
+      sprite.drawBitmap(0,10,RowBmp128,240,320,TFT_WHITE,TFT_BLACK);
+      //sprite.drawBitmap(0, 10, RowBmp128, 128, 88, TFT_WHITE, TFT_BLACK);
       sprite.pushSprite(0, 0);
       myFile.close();
     }
@@ -72,7 +74,7 @@ void IRAM_ATTR DrawBmp(String name)
   else
   {
     //Serial.print(F("error opening "));
-    Serial.println(name);
+    //Serial.println(name);
   }
 }
 
@@ -124,7 +126,13 @@ void TFT_sad_blink(int start_index, int end_index)
 }
 
 void TFT_usualExpression(){
-    if(previous_face_condition!=0){
+  //DrawBmp("/001.bmp");
+  //tft.setRotation(4);
+  tft.setTextColor(TFT_WHITE);
+  tft.setTextSize(5);
+  tft.drawString("12345678910",50,50);
+  //tft.setRotation(6);
+    /*if(previous_face_condition!=0){
         sprite.drawXBitmap(2,2,black_background,128,128,TFT_BLACK,TFT_BLACK);
         sprite.pushSprite(0,0);
         if(previous_face_condition==3){//之前是生气表情
@@ -183,7 +191,7 @@ void TFT_usualExpression(){
       TFT_usual("03",1,6);
       random_facial_type=3;
     }
-  }
+  }*/
 
 }
 
