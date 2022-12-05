@@ -4,6 +4,8 @@
 #include <WiFi.h>
 #include <esp_wifi.h>
 #include <Voice.h>
+#include <Global_vars.h>
+#include <DataReceive.h>
 
 boolean connected_with_controller = false; //连没连上控制器
 boolean first_time_lost_connection=true;//首次运行若未连接控制器则播放未连接语音
@@ -32,6 +34,7 @@ void onDataSent(const uint8_t *mac_addr, esp_now_send_status_t sendStatus)
 
 void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len){
     memcpy(&received_data, incomingData, sizeof(received_data));
+    DataProcess(*received_data.x,received_data.y);
     // Serial.print("Bytes received: ");
     // Serial.println(len);
     // Serial.print("x: ");
@@ -72,19 +75,29 @@ void send_data_now(char c,int num){
 void lost_connection_funcs(){
     send_data_now('0',0);
     if(first_time_lost_connection){
-        int random_play_num=random(90,92);
-        play_voice(random_play_num);
-        first_time_lost_connection=false;
-        first_time_build_connection=true;
-        
+      //播放丢失连接语音
+      int random_play_num=random(90,92);
+      play_voice(random_play_num);
+      first_time_lost_connection=false;
+      first_time_build_connection=true;
+      //还原配置
+
+      //需要重新播放连接成功语音
+      robot_started=false;
     }
 }
 
 void build_connection_funcs(){
-    if(first_time_build_connection==true){
-        int random_play_num=random(92,94);
-        play_voice(random_play_num);
-        first_time_build_connection=false;
-        first_time_lost_connection=true;
+    if(first_time_build_connection){
+      //播放建立连接语音
+      int random_play_num=random(92,94);
+      play_voice(random_play_num);
+      first_time_build_connection=false;
+      first_time_lost_connection=true;
+      //初始化所有功能
+
+      //启动完成，可以进行遥控
+      robot_started=true;
+
   }
 }

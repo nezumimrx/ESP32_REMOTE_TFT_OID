@@ -3,6 +3,7 @@
 
 Preferences pref;
 int volume=15;
+int receive_voice_condition=0;
 /*
 目前用的仍然是串口通信的语音芯片，之后肯定要换成雨鑫的语音芯片
 

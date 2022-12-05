@@ -136,5 +136,6 @@
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bootloader_support/include/esp_app_format.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/cores/esp32/MD5Builder.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp_rom_md5.h \
+ C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/spi_reg.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp32/rom/spi_flash.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/efuse_reg.h

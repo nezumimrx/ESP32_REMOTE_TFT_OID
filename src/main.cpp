@@ -6,7 +6,12 @@
 #include <Voice.h>
 #include <Espnow_slave.h>
 #include <SerialCmd.h>
+#include <lvgl.h>
 //*parameters 
+//robot_started在build_connection_funcs结尾，确保在启动语音以及连接遥控语音播放完毕之后才可操控
+boolean robot_started=false;
+//mode_switch,操控的几种不同模式
+
 int Mode_Switch=0;//0-遥控模式, 1 -编程闯关模式，2-编程积分模式
 TaskHandle_t TFT_TASK_Handle;
 TaskHandle_t OID_TASK_Handle;
@@ -23,16 +28,18 @@ void OID_TASK(void*parameters){
 
 void TICK_TASK(void*parameters){
   for(;;){
-    
-    vTaskDelay(50/portTICK_PERIOD_MS);
+    lv_timer_handler(); /* let the GUI do its work */
+    vTaskDelay(5/portTICK_PERIOD_MS);
   }
 }
 
 void TFT_TASK(void*parameters){
+  
   for(;;){
     if(face_condition==0){
       TFT_usualExpression();
     }
+    vTaskDelay(10/portTICK_PERIOD_MS);
   }
 }
 
@@ -43,13 +50,12 @@ void setup() {
   Serial.println("Sugar Eureka 20221117!");
   pwm_init();
   TFT_func_init();
-  //OID_Init();
+  OID_Init();
   volume_read_memory();//从pref里面读取语音预设
   espnow_slave_init();
-  //xTaskCreate(OID_TASK,"OID_TASK",3000,NULL,1,&OID_TASK_Handle);
-  xTaskCreate(TICK_TASK,"TICK_TASK",3000,NULL,1,NULL);
-  xTaskCreate(TFT_TASK, "TFT_TASK", 10000, NULL, 1, &TFT_TASK_Handle);
-
+  xTaskCreate(OID_TASK,"OID_TASK",3000,NULL,1,&OID_TASK_Handle);
+  xTaskCreate(TICK_TASK,"TICK_TASK",3000,NULL,3,NULL);
+  xTaskCreate(TFT_TASK, "TFT_TASK", 40000, NULL, 2, &TFT_TASK_Handle);
 }
 
 void loop() {

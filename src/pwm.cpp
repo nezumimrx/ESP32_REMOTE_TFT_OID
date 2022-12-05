@@ -47,6 +47,7 @@ uint8_t pwm_res = 8;//PWM精度，2的8次方，8就是0-255如果是10就是0-1
 int angle_tolerance=10;//reposition的时候角度容差，和目标夹角范围小于10度就行了
 int distance_tolerance=20;//reposition的时候距离容差范围，距离目标定位2cm就行了
 
+uint8_t receive_wheel_condition=0;
 
 void pwm_init()
 {
