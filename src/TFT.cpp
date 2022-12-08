@@ -101,8 +101,8 @@ void expression_img_create(void)
 void TFT_usualExpression(){
   astronaut_img_create();
   vTaskDelay(2000/portTICK_PERIOD_MS);
-  expression_img_create();
-  vTaskDelay(2000/portTICK_PERIOD_MS);
+  //expression_img_create();
+  //vTaskDelay(2000/portTICK_PERIOD_MS);
 }
 // void TFT_usual(String switchbehavior,int start_index, int end_index)
 // {

@@ -73,7 +73,8 @@ void send_data_now(char c,int num){
 }
 
 void lost_connection_funcs(){
-    send_data_now('0',0);
+    send_data_now('0',0);//检测是否连接了控制器
+    
     if(first_time_lost_connection){
       //播放丢失连接语音
       int random_play_num=random(90,92);

@@ -2,7 +2,6 @@
 #include <Global_vars.h>
 
 Preferences pref;
-int volume=15;
 int receive_voice_condition=0;
 /*
 目前用的仍然是串口通信的语音芯片，之后肯定要换成雨鑫的语音芯片
@@ -40,7 +39,7 @@ void change_volume(int num){//0-30音量
 void volume_read_memory(){
   pref.begin("volume",false);//false-write/read true-read only
   int read_volume = pref.getInt("vol",0);//读取nvm存储的音量是多少
-  if(read_volume==0)change_volume(volume);//如果是0，说明没改过设置，默认按0-30的第15档设置
+  if(read_volume==0)change_volume(Speaker_volume);//如果是0，说明没改过设置，默认按0-30的第15档设置
   else change_volume(read_volume);//如果不是0，那么用户更改过音量设置，按上一次保存的音量运行
   pref.end();
 }

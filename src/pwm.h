@@ -13,5 +13,6 @@ void mecanum_right(int MotorSpeed);
 void pwm_stop();
 void pwm_local_process_code_behaviors(int condition,int MotorSpeed);
 void pwm_oid_reposition(int target_x,int target_y,int target_angle,int MotorSpeed);
+void remote_control_behaviors();
 
 #endif

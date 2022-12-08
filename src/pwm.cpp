@@ -47,8 +47,6 @@ uint8_t pwm_res = 8;//PWM精度，2的8次方，8就是0-255如果是10就是0-1
 int angle_tolerance=10;//reposition的时候角度容差，和目标夹角范围小于10度就行了
 int distance_tolerance=20;//reposition的时候距离容差范围，距离目标定位2cm就行了
 
-uint8_t receive_wheel_condition=0;
-
 void pwm_init()
 {
     pinMode(pwmA1, OUTPUT);
@@ -126,6 +124,25 @@ void mecanum_right(int MotorSpeed)
     Serial.println("mec move right");
 }
 
+void diagonal_forward_left(int MotorSpeed){
+    pwm_motion(0, 0, MotorSpeed, 0, MotorSpeed, 0, 0, 0);
+    Serial.println("diagonal_forward_left");
+}
+
+void diagonal_forward_right(int MotorSpeed){
+    pwm_motion(MotorSpeed, 0, 0, 0, 0, 0, MotorSpeed, 0);
+    Serial.println("diagonal_forward_right");
+}
+void diagonal_backward_left(int MotorSpeed){
+    pwm_motion(0, MotorSpeed, 0, 0, 0, 0, 0, MotorSpeed);
+    Serial.println("diagonal_backward_left");
+}
+
+void diagonal_backward_right(int MotorSpeed){
+    pwm_motion(0, 0, 0, MotorSpeed, 0, MotorSpeed, 0, 0);
+    Serial.println("diagonal_backward_right");
+}
+
 void pwm_stop()
 {
     pwm_motion(0, 0, 0, 0, 0, 0, 0, 0);
@@ -167,15 +184,15 @@ void pwm_calculate_movement(int target_x,int target_y,int current_x,int current_
         }else if(delta_X>0&&delta_Y==0){//当前定位在目标定位左侧
             target_Angle=90;
         }
-        Serial.print("Should turn to Angle: ");Serial.println(target_Angle);
-        Serial.print("Distance to go: ");Serial.println(distance);
+        //Serial.print("Should turn to Angle: ");Serial.println(target_Angle);
+        //Serial.print("Distance to go: ");Serial.println(distance);
         if(distance>=distance_tolerance){
             int delta_Angle=(current_angle-target_Angle);
             if((current_angle>=355&&current_angle<=360&&target_Angle<=5&&target_Angle>=0)||(target_Angle>=355&&target_Angle<=360&&current_angle<=5&&current_angle>=0)){
-                Serial.println("around 360/0 degree move forward");
+                //Serial.println("around 360/0 degree move forward");
             }else if(abs(delta_Angle)>=angle_tolerance){
                 if(delta_Angle<0&&abs(delta_Angle)>=180){
-                    Serial.println("move left");
+                    //Serial.println("move left");
                     pwm_rotate_left(MotorSpeed);
                 }else if(delta_Angle<0&&abs(delta_Angle)<180){
                     pwm_rotate_right(MotorSpeed);
@@ -185,29 +202,29 @@ void pwm_calculate_movement(int target_x,int target_y,int current_x,int current_
                     pwm_rotate_left(MotorSpeed);
                 }
             }else if(abs(delta_Angle)<angle_tolerance){
-                Serial.println("just go forward");
+                //Serial.println("just go forward");
                 pwm_forward(MotorSpeed);
             }
         }else if(distance<=distance_tolerance){
             int delta_Angle = (current_angle-inposition_target_angle);
             if((current_angle>=355&&current_angle<=360&&inposition_target_angle<=5&&inposition_target_angle>=0)||(inposition_target_angle>=355&&inposition_target_angle<=360&&current_angle<=5&&current_angle>=0)){
-                Serial.println("around 360/0 degree stop rotation");
+                //Serial.println("around 360/0 degree stop rotation");
             }else if(abs(delta_Angle)>=angle_tolerance){
                 if(delta_Angle<0&&abs(delta_Angle)>=180){
-                    Serial.println("rotate left");
+                    //Serial.println("rotate left");
                     pwm_rotate_left(MotorSpeed);
                 }else if(delta_Angle<0&&abs(delta_Angle)<180){
-                    Serial.println("rotate right");
+                    //Serial.println("rotate right");
                     pwm_rotate_right(MotorSpeed);
                 }else if(delta_Angle>0&&abs(delta_Angle)>=180){
-                    Serial.println("rotate right");
+                    //Serial.println("rotate right");
                     pwm_rotate_right(MotorSpeed);
                 }else if(delta_Angle>0&&abs(delta_Angle)<180){
-                    Serial.println("rotate left");
+                    //Serial.println("rotate left");
                     pwm_rotate_left(MotorSpeed);
                 }
             }else if(abs(delta_Angle)<angle_tolerance){
-                Serial.println("stop rotation");
+                //Serial.println("stop rotation");
                 pwm_stop();
             }
         }             
@@ -219,13 +236,59 @@ void pwm_oid_reposition(int target_x,int target_y,int target_angle,int MotorSpee
         if(OID_X!=0){
             if(OID_Y!=0){
                 if(OID_Angle!=0){
-                    Serial.print("X: ");Serial.print(OID_X);Serial.print(" Y: ");Serial.print(OID_Y);Serial.print(" Angle: ");Serial.println(OID_Angle);
+                    //Serial.print("X: ");Serial.print(OID_X);Serial.print(" Y: ");Serial.print(OID_Y);Serial.print(" Angle: ");Serial.println(OID_Angle);
                     pwm_calculate_movement(target_x,target_y,OID_X,OID_Y,OID_Angle,target_angle,MotorSpeed);
                 }
             }
         }
     }
 }
+
+void basic_remote_control_behaviors(int MotorSpeed){
+    if(button_pressed==0){
+        pwm_stop();
+        remote_running=false;
+    }else if(button_pressed==1){
+        pwm_forward(MotorSpeed);
+        remote_running=true;
+    }else if(button_pressed==2){
+        pwm_backward(MotorSpeed);
+        remote_running=true;
+    }else if(button_pressed==3){
+        pwm_rotate_left(MotorSpeed);
+        remote_running=true;
+    }else if(button_pressed==4){
+        pwm_rotate_right(MotorSpeed);
+        remote_running=true;
+    }else if(button_pressed==5){
+        mecanum_left(MotorSpeed);
+        remote_running=true;
+    }else if(button_pressed==6){
+        mecanum_right(MotorSpeed);
+        remote_running=true;
+    }else if(button_pressed==13){
+        diagonal_forward_left(MotorSpeed);
+    }else if(button_pressed==14){
+        diagonal_forward_right(MotorSpeed);
+    }else if(button_pressed==23){
+        diagonal_backward_left(MotorSpeed);
+    }else if(button_pressed==24){
+        diagonal_backward_right(MotorSpeed);
+    }
+}
+
+
+void remote_control_behaviors(){
+    if(receive_data_flag==true){
+        //Serial.print("Button before process: ");Serial.println(button_pressed);
+        basic_remote_control_behaviors(Mode_0_Speed);
+
+
+
+        receive_data_flag=false;
+    }
+}
+
 
 
 

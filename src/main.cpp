@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <pwm.h>
+#include <DataReceive.h>
 #include <TFT.h>
 #include <OID.h>
 #include <Global_vars.h>
@@ -7,6 +8,8 @@
 #include <Espnow_slave.h>
 #include <SerialCmd.h>
 #include <lvgl.h>
+
+
 //*parameters 
 //robot_started在build_connection_funcs结尾，确保在启动语音以及连接遥控语音播放完毕之后才可操控
 boolean robot_started=false;
@@ -16,6 +19,8 @@ int Mode_Switch=0;//0-遥控模式, 1 -编程闯关模式，2-编程积分模式
 TaskHandle_t TFT_TASK_Handle;
 TaskHandle_t OID_TASK_Handle;
 int face_condition=0;//0-默认脸，1-编程脸
+int Mode_0_Speed = 255;//遥控模式的电机转速
+int Speaker_volume = 15;//初始音量设置为15
 
 //*Tasks
 
@@ -43,6 +48,15 @@ void TFT_TASK(void*parameters){
   }
 }
 
+void Data_Receive_TASK(void*parameters){
+  
+  for(;;){
+
+    Remote_Data_Analyse();
+    vTaskDelay(15/portTICK_PERIOD_MS);
+  }
+}
+
 
 void setup() {
   Serial.begin(115200);
@@ -56,6 +70,7 @@ void setup() {
   xTaskCreate(OID_TASK,"OID_TASK",3000,NULL,1,&OID_TASK_Handle);
   xTaskCreate(TICK_TASK,"TICK_TASK",3000,NULL,3,NULL);
   xTaskCreate(TFT_TASK, "TFT_TASK", 40000, NULL, 2, &TFT_TASK_Handle);
+  xTaskCreate(Data_Receive_TASK, "Data_Receive_TASK", 5000, NULL, 1, &TFT_TASK_Handle);
 }
 
 void loop() {

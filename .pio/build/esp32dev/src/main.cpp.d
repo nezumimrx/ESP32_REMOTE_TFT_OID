@@ -127,7 +127,7 @@
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
- src/pwm.h src/TFT.h src/OID.h src/Global_vars.h \
+ src/pwm.h src/DataReceive.h src/TFT.h src/OID.h src/Global_vars.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src/Preferences.h \
  src/Voice.h src/Espnow_slave.h src/SerialCmd.h \
  .pio/libdeps/esp32dev/lvgl/lvgl.h \
