@@ -127,9 +127,10 @@
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
- src/pwm.h src/DataReceive.h src/TFT.h src/OID.h src/Global_vars.h \
+ lib/pwm/pwm.h src/RemoteReceive.h src/OID_Card_Read.h src/TFT.h \
+ lib/OID/OID.h lib/GlobalVars/Global_vars.h \
  C:/Users/Administrator/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src/Preferences.h \
- src/Voice.h src/Espnow_slave.h src/SerialCmd.h \
+ lib/Voice/Voice.h src/Espnow_slave.h src/SerialCmd.h \
  .pio/libdeps/esp32dev/lvgl/lvgl.h \
  .pio/libdeps/esp32dev/lvgl/src/misc/lv_log.h \
  .pio/libdeps/esp32dev/lvgl/src/misc/../lv_conf_internal.h \
@@ -355,4 +356,5 @@
  .pio/libdeps/esp32dev/lvgl/src/extra/widgets/imgbtn/lv_imgbtn.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/widgets/imgbtn/../../../lvgl.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/widgets/span/lv_span.h \
- .pio/libdeps/esp32dev/lvgl/src/extra/widgets/span/../../../lvgl.h
+ .pio/libdeps/esp32dev/lvgl/src/extra/widgets/span/../../../lvgl.h \
+ lib/RemoteCoding/CodeParse.h

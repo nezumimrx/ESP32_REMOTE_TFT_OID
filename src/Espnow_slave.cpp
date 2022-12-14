@@ -5,7 +5,7 @@
 #include <esp_wifi.h>
 #include <Voice.h>
 #include <Global_vars.h>
-#include <DataReceive.h>
+#include <RemoteReceive.h>
 
 boolean connected_with_controller = false; //连没连上控制器
 boolean first_time_lost_connection=true;//首次运行若未连接控制器则播放未连接语音
