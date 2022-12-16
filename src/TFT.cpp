@@ -24,6 +24,8 @@
 #define BMPHEIGHT 320
 
 lv_obj_t *animation_screen;
+int test_counter=0;
+int test_plus=-1;
 
 TFT_eSPI tft = TFT_eSPI(BMPWIDTH,BMPHEIGHT); // Invoke library
 static lv_disp_draw_buf_t draw_buf;
@@ -100,7 +102,12 @@ void expression_img_create(void)
 
 void TFT_usualExpression(){
   astronaut_img_create();
-  vTaskDelay(2000/portTICK_PERIOD_MS);
+  
+  vTaskDelay(1050/portTICK_PERIOD_MS);
+  //static lv_style_t style_move;
+  //lv_style_init(&style_move);
+  //lv_style_set_translate_x(&style_move, -20);
+  //lv_obj_add_style(animation_screen, &style_move, LV_STATE_DEFAULT);
   //expression_img_create();
   //vTaskDelay(2000/portTICK_PERIOD_MS);
 }
