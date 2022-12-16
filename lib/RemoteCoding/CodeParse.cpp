@@ -4,12 +4,14 @@
 #include "CodeParse.h"
 String looptimes_strFormat = ""; //这个looptimes_strFormat由于放在下面开空间的话会出现存不进去数据的情况，所以要放到全局变量中
 boolean processing_condition =false;
+boolean need_start_over_codeparse=false;//由于紧急停止之后CodeTask被Suspend了，但是紧急停止之后想要再次按下运行重新执行codeparse，则会直接跳到start_cypher=0使得代码无法执行code_parse(string),因此这个变量是在code_parse_emergent_stop变为true，使得start_cypher不变为0，从而再次执行code_parse
 void code_parse_emergent_stop(){
     instant_stop=1;
     start_cypher=0;
     vTaskSuspend(Code_Process_Handle);
     code_str_clean="";
     pwm_stop();
+    need_start_over_codeparse=true;
 }
 
 

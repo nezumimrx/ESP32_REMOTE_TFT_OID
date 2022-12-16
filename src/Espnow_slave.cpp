@@ -21,7 +21,7 @@ data_to_send send_data;
 
 typedef struct data_to_recv
 {
-    char x[2];
+    char x;
     int y;
 } data_to_recv;
 data_to_recv received_data;
@@ -34,7 +34,9 @@ void onDataSent(const uint8_t *mac_addr, esp_now_send_status_t sendStatus)
 
 void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len){
     memcpy(&received_data, incomingData, sizeof(received_data));
-    DataProcess(*received_data.x,received_data.y);
+    DataProcess(received_data.x,received_data.y);
+    received_data.x='0';
+    received_data.y=0;
     // Serial.print("Bytes received: ");
     // Serial.println(len);
     // Serial.print("x: ");
@@ -42,6 +44,7 @@ void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len){
     // Serial.print("y: ");
     // Serial.println(received_data.y);
     // Serial.println();
+    delay(5);
 }
 
 void espnow_slave_init()

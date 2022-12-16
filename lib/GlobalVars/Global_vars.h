@@ -18,6 +18,9 @@ extern boolean connected_with_controller;//espnow专用，持续发送（‘0’
 //接收到遥控器按下了哪个按键，单纯为了代码方便把数字加到37往后
 extern int button_pressed;//123456前后左右平移13左前14右前23左后24右后/25循环2次/26循环3次/27循环结束/28条件1开始/29条件1结束/30条件2开始/31条件2结束/32条件3开始/33条件3结束/34交互1/35交互2/36交互3/37模式38清空39撤回40音量41运行
                           //其中button_pressed变为25-36之间的数字并不是由遥控器输入的，而是由用户读取卡片从而实现的，例如用户录入指令阶段，读取了一张场景交互卡1，则同样会触发button_pressed=34
+extern int previous_button_pressed;
+extern boolean button_pressed_timer_start;
+extern int button_pressed_timer_counter;
 //
 //Start-up Parameters
 extern boolean robot_started;
@@ -43,6 +46,7 @@ extern boolean start_cypher;//是否正在执行编程指令
 extern boolean instant_stop;//紧急停止
 extern String code_str_raw;//录入的原始指令
 extern String code_str_clean;
+extern boolean need_start_over_codeparse;//由于紧急停止之后CodeTask被Suspend了，但是紧急停止之后再次按下运行，会直接跳到start_cypher=0使得代码无法执行code_parse(string),因此这个变量是在code_parse_emergent_stop变为true，使得start_cypher不变为0，从而再次执行code_parse
 
 extern boolean has_condition_type1;//在存储code_str_condition_type1的同时，将has_condition_type1置为1，没有则为0
 extern boolean receive_condition_type1;//是否踩到了对应的卡片上

@@ -60,15 +60,23 @@ void Timer_TASK(void*parameters){
         on_Story_Stage_Level=0;//离开地图了这个on_Story_Stage_Level也要清0，恢复为没有读取到关卡状态，否则Mask_OID还有数据，
       }
     }
+
+    if(button_pressed_timer_start){
+      button_pressed_timer_counter++;
+      if(button_pressed_timer_counter>25){
+        button_pressed_timer_start=false;
+        previous_button_pressed=88;
+      }
+    }
     vTaskDelay(10/portTICK_PERIOD_MS);
   }
 }
 
 void TFT_TASK(void*parameters){
-  
+  TFT_usualExpression();
   for(;;){
     if(face_condition==0){
-      TFT_usualExpression();
+      //
     }
     vTaskDelay(10/portTICK_PERIOD_MS);
   }
@@ -79,7 +87,11 @@ void Code_Process_TASK(void*parameters){//遥控器命令处理
   for(;;){
     if(start_cypher==true){
       code_parse(code_str_clean);
-      start_cypher=0;
+      if(need_start_over_codeparse==true){
+        need_start_over_codeparse=false;
+      }else if(need_start_over_codeparse==false){
+        start_cypher=0;
+      }
     }
     vTaskDelay(15/portTICK_PERIOD_MS);
   }
@@ -98,15 +110,16 @@ void setup() {
   xTaskCreate(OID_TASK,"OID_TASK",5000,NULL,1,&OID_TASK_Handle);
   xTaskCreate(TICK_TASK,"TICK_TASK",3000,NULL,3,NULL);
   xTaskCreate(Timer_TASK,"Timer_TASK",3000,NULL,4,NULL);
-  xTaskCreate(TFT_TASK, "TFT_TASK", 40000, NULL, 2, &TFT_TASK_Handle);
+  xTaskCreate(TFT_TASK, "TFT_TASK", 80000, NULL, 2, &TFT_TASK_Handle);
   xTaskCreate(Code_Process_TASK, "Code_Process_TASK", 7000, NULL, 1, &Code_Process_Handle);
 }
 
 void loop() {
   SerialCommands();
   if(connected_with_controller==true){
+    
     build_connection_funcs();
-    Remote_Data_Analyse();//在循环中快速接收指令
+    
     //卡片识别玩法，提示用户请将我放在带有方向指令的卡片上进行游戏
     
     
