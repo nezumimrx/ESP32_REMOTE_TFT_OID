@@ -109,10 +109,10 @@ void Remote_Data_Analyse(){//包含解析代码，但是处理编程指令在Cod
 
     }else if(Mode_Switch==1){
         if(start_cypher==false){//没有开始运行编程指令，用户可以对指令进行编辑，一旦开始，只能紧急停止
+            face_condition=1;
             if(button_pressed<37&&button_pressed!=0&&receive_data_flag==true){add_remote_commands();receive_data_flag=false;}//录入编程指令,button_pressed!=0保证动作按键连带的00 0000 0000不会被计入
             else if(button_pressed==37&&receive_data_flag==true){change_modes();receive_data_flag=false;}
             else if(button_pressed==40&&receive_data_flag==true){change_volumes();receive_data_flag=false;}
-
             else if(button_pressed==38&&receive_data_flag==true){clear_commands();receive_data_flag=false;}//清空指令
             else if(button_pressed==39&&receive_data_flag==true){delete_commands();receive_data_flag=false;}//撤回指令
             else if(button_pressed==41&&receive_data_flag==true){run_commands();receive_data_flag=false;}//运行，起来接着写

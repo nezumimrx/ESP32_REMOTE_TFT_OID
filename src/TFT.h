@@ -3,6 +3,6 @@
 #include <Arduino.h>
 void TFT_func_init();
 void TFT_usualExpression();
-
+void TFT_drawArrow();
 
 #endif

@@ -400,7 +400,7 @@ void OID_scan(){
         temp_Y[temp_debounce] = (((OID_Receive[2]<<2)+(OID_Receive[3]>>14))&0x3FFF);
         temp_Angle[temp_debounce] = (((OID_Receive[0]<<3)+(OID_Receive[1]>>13))&0x1FF);
         //Serial.println(temp_debounce);
-        //Serial.print("temp_X: ");Serial.print(temp_X[temp_debounce]);Serial.print(" temp_Y: ");Serial.print(temp_Y[temp_debounce]);Serial.print(" temp_Angle: ");Serial.println(temp_Angle[temp_debounce]);
+        Serial.print("temp_X: ");Serial.print(temp_X[temp_debounce]);Serial.print(" temp_Y: ");Serial.print(temp_Y[temp_debounce]);Serial.print(" temp_Angle: ");Serial.println(temp_Angle[temp_debounce]);
         if(temp_X[temp_debounce]>=15000||temp_Y[temp_debounce]>=15000){
           OID_available=false;
           temp_debounce=0;

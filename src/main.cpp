@@ -73,10 +73,12 @@ void Timer_TASK(void*parameters){
 }
 
 void TFT_TASK(void*parameters){
-  TFT_usualExpression();
+  
   for(;;){
     if(face_condition==0){
-      //
+      TFT_usualExpression();
+    }else if(face_condition==1){
+      TFT_drawArrow();
     }
     vTaskDelay(10/portTICK_PERIOD_MS);
   }

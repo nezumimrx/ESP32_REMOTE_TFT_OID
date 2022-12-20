@@ -225,6 +225,4 @@
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/gif/../../../../src/extra/widgets/imgbtn/lv_imgbtn.h \
  c:\users\administrator\desktop\esp32_remote_tft_oid\.pio\libdeps\esp32dev\lvgl\src\lvgl.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/gif/../../../../src/extra/widgets/span/lv_span.h \
- c:\users\administrator\desktop\esp32_remote_tft_oid\.pio\libdeps\esp32dev\lvgl\src\lvgl.h \
- .pio/libdeps/esp32dev/lvgl/src/extra/libs/gif/gifdec.h \
- .pio/libdeps/esp32dev/lvgl/src/extra/libs/gif/../../../misc/lv_fs.h
+ c:\users\administrator\desktop\esp32_remote_tft_oid\.pio\libdeps\esp32dev\lvgl\src\lvgl.h

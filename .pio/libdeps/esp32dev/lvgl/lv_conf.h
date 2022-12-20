@@ -27,7 +27,7 @@
 #define LV_COLOR_DEPTH 16
 
 /*Swap the 2 bytes of RGB565 color. Useful if the display has an 8-bit interface (e.g. SPI)*/
-#define LV_COLOR_16_SWAP 1
+#define LV_COLOR_16_SWAP 0 //这个一定是0否则颜色是错的
 
 /*Enable features to draw on transparent background.
  *It's required if opa, and transform_* style properties are used.
@@ -629,18 +629,18 @@
 #endif
 
 /*PNG decoder library*/
-#define LV_USE_PNG 1
-#define LV_PNG_USE_LV_FILESYSTEM 1
+#define LV_USE_PNG 0
+#define LV_PNG_USE_LV_FILESYSTEM 0
 
 /*BMP decoder library*/
-#define LV_USE_BMP 1
+#define LV_USE_BMP 0
 
 /* JPG + split JPG decoder library.
  * Split JPG is a custom format optimized for embedded systems. */
 #define LV_USE_SJPG 0
 
 /*GIF decoder library*/
-#define LV_USE_GIF 1
+#define LV_USE_GIF 0
 
 /*QR code library*/
 #define LV_USE_QRCODE 0

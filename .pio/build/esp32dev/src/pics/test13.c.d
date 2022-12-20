@@ -154,8 +154,6 @@
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/gif/lv_gif.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/gif/../../../lvgl.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/gif/../../../../lvgl.h \
- .pio/libdeps/esp32dev/lvgl/src/extra/libs/gif/gifdec.h \
- .pio/libdeps/esp32dev/lvgl/src/extra/libs/gif/../../../misc/lv_fs.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/qrcode/lv_qrcode.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/qrcode/../../../lvgl.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/sjpg/lv_sjpg.h \

@@ -5,11 +5,8 @@
 
 /*
 需要在下载的TFT_eSPI库中，找到User_Setup.h调整以下内容
-注释掉 #define ILI9341_DRIVER 
-启用 #define ST7735_DRIVER
-启用 #define TFT_WIDTH  128
-启用 #define TFT_HEIGHT 128
-启用 #define ST7735_GREENTAB3
+以下内容针对ILI9341驱动的显示器，
+启用 #define ILI9341_DRIVER 
 注释掉 #define TFT_CS   PIN_D8  // Chip select control pin D8
 注释掉 #define TFT_DC   PIN_D3  // Data Command control pin
 注释掉 #define TFT_RST  PIN_D4  // Reset pin (could connect to NodeMCU RST, see next line)
@@ -19,11 +16,28 @@
 启用 #define TFT_CS   15  // Chip select control pin
 启用 #define TFT_DC    2  // Data Command control pin
 启用 #define TFT_RST   4  // Reset pin (could connect to RST pin)
+启用 #define TFT_RGB_ORDER TFT_BGR  // Colour order Blue-Green-Red//这个一定要打开，否则颜色是错的
+*/
+
+/* 
+对于LVGL库则需要配置lv_conf.h
+#define LV_COLOR_DEPTH 16
+#define LV_COLOR_16_SWAP 0 //这个一定是0否则颜色是错的
+修改图片.c文件的开头配色，按BGR顺序
+0x24, 0xe3, 0xf2, 0xff, 	//BGR
+#define LV_TICK_CUSTOM 1
+
 */
 #define BMPWIDTH 240
 #define BMPHEIGHT 320
 
 lv_obj_t *animation_screen;
+lv_obj_t *animation_page;
+lv_obj_t *arrow_page;
+lv_obj_t *left_pos_item;
+lv_obj_t *middle_pos_item;
+lv_obj_t *right_pos_item;
+
 int test_counter=0;
 int test_plus=-1;
 
@@ -45,6 +59,14 @@ LV_IMG_DECLARE(test10);
 LV_IMG_DECLARE(test11);
 LV_IMG_DECLARE(test12);
 LV_IMG_DECLARE(test13);
+LV_IMG_DECLARE(Arrow_left_bw);
+LV_IMG_DECLARE(Arrow_up_bw);
+LV_IMG_DECLARE(Arrow_right_bw);
+LV_IMG_DECLARE(loop2);
+LV_IMG_DECLARE(loop3);
+LV_IMG_DECLARE(loopend);
+
+
 const lv_img_dsc_t *astronaut_img_list[25] = {&test1,&test2,&test3,&test4,&test5,&test6,&test7,&test8,&test9,&test10,&test11,&test12,&test13,
 &test12,&test11,&test10,&test9,&test8,&test7,&test6,&test5,&test4,&test3,&test2,&test1,
 };
@@ -63,6 +85,141 @@ void my_disp_flush( lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *colo
     tft.endWrite();
     lv_disp_flush_ready( disp );
 }
+
+void create_anim_screen(){
+  static lv_style_t no_border_style;
+  lv_style_init(&no_border_style);
+  lv_style_set_border_width(&no_border_style,0);
+  animation_page = lv_obj_create(NULL);
+  lv_obj_add_style(animation_page,&no_border_style,LV_PART_MAIN);
+  lv_obj_set_size(animation_page,BMPWIDTH,BMPHEIGHT);
+  lv_obj_set_style_bg_color(animation_page, lv_color_hex(0x000000), LV_PART_MAIN);//背景涂黑
+  animation_screen=lv_animimg_create(animation_page); //创建一个animation screen
+  lv_obj_center(animation_screen);
+}
+
+void create_arrow_screen(){
+  static lv_style_t no_border_style;
+  lv_style_init(&no_border_style);
+  lv_style_set_border_width(&no_border_style,0);
+
+  arrow_page = lv_obj_create(NULL);
+  lv_obj_add_style(arrow_page,&no_border_style,LV_PART_MAIN);
+  lv_obj_set_size(arrow_page,BMPWIDTH+10,BMPHEIGHT+10);
+  lv_obj_set_style_bg_color(arrow_page, lv_color_hex(0x000000), LV_PART_MAIN);//背景涂黑
+  lv_obj_center(arrow_page);
+  //创建一个框框装代码图形
+  static lv_style_t has_border_style;
+  lv_style_init(&has_border_style);
+  lv_style_set_border_width(&has_border_style,2);
+  lv_style_set_border_color(&has_border_style,lv_color_hex(0xffffff));
+
+  lv_obj_t *code_space = lv_obj_create(arrow_page);
+  lv_obj_set_size(code_space,240,90);
+  lv_obj_set_style_bg_color(code_space, lv_color_hex(0x091833), LV_PART_MAIN);//背景白色
+  lv_obj_align(code_space,LV_ALIGN_CENTER,0,0);
+  lv_obj_add_style(code_space,&has_border_style,LV_PART_MAIN);
+  //
+  left_pos_item=lv_img_create(arrow_page);
+  middle_pos_item=lv_img_create(arrow_page);
+  right_pos_item=lv_img_create(arrow_page);
+  lv_obj_align(left_pos_item, LV_ALIGN_CENTER, -80, 0);
+  lv_obj_align(middle_pos_item,LV_ALIGN_CENTER,0,0);
+  lv_obj_align(right_pos_item,LV_ALIGN_CENTER,80,0);
+  
+
+  
+
+}
+void arrow_image_create(int left_image_type, int middle_image_type, int right_image_type){//最左侧是什么种类的图标？1-上2-右3-左，25-循环2次，26循环3次，27循环结束
+  switch (left_image_type)
+  {
+  case 1:
+    lv_img_set_src(left_pos_item,&Arrow_up_bw);
+    break;
+  case 2:
+    lv_img_set_src(left_pos_item,&Arrow_right_bw);
+    break;
+  case 3:
+    lv_img_set_src(left_pos_item,&Arrow_left_bw);
+    break;
+  case 25://循环2次，这个捆绑的是button_pressed,为么是25？参考button_pressed声明备注
+    lv_img_set_src(left_pos_item,&loop2);
+    break;
+  case 26:
+    lv_img_set_src(left_pos_item,&loop3);
+    break;
+  case 27:
+    lv_img_set_src(left_pos_item,&loopend);
+    break;
+  default:
+    lv_img_set_src(left_pos_item,NULL);
+    break;
+  }
+
+  switch (middle_image_type)
+  {
+  case 1:
+    lv_img_set_src(middle_pos_item,&Arrow_up_bw);
+    break;
+  case 2:
+    lv_img_set_src(middle_pos_item,&Arrow_right_bw);
+    break;
+  case 3:
+    lv_img_set_src(middle_pos_item,&Arrow_left_bw);
+    break;
+   case 25://循环2次，这个捆绑的是button_pressed,为么是25？参考button_pressed声明备注
+    lv_img_set_src(middle_pos_item,&loop2);
+    break;
+  case 26:
+    lv_img_set_src(middle_pos_item,&loop3);
+    break;
+  case 27:
+    lv_img_set_src(middle_pos_item,&loopend);
+    break;
+  default:
+    lv_img_set_src(middle_pos_item,NULL);
+    break;
+  }
+
+  switch (right_image_type)
+  {
+  case 1:
+    lv_img_set_src(right_pos_item,&Arrow_up_bw);
+    break;
+  case 2:
+    lv_img_set_src(right_pos_item,&Arrow_right_bw);
+    break;
+  case 3:
+    lv_img_set_src(right_pos_item,&Arrow_left_bw);
+    break;
+   case 25://循环2次，这个捆绑的是button_pressed,为么是25？参考button_pressed声明备注
+    lv_img_set_src(right_pos_item,&loop2);
+    break;
+  case 26:
+    lv_img_set_src(right_pos_item,&loop3);
+    break;
+  case 27:
+    lv_img_set_src(right_pos_item,&loopend);
+    break;
+  default:
+    lv_img_set_src(right_pos_item,NULL);
+    break;
+  }
+
+}
+
+
+void astronaut_img_create(void)
+{
+   lv_animimg_set_duration(animation_screen, 25*40);//25*40ms 
+   lv_animimg_set_src(animation_screen, (lv_img_dsc_t **)astronaut_img_list, 25);
+   lv_animimg_set_repeat_count(animation_screen, 1);
+   lv_animimg_start(animation_screen);
+   lv_scr_load(animation_page);
+}
+
+
 void TFT_func_init()
 {
   tft.begin(); // Initialise the display
@@ -78,19 +235,17 @@ void TFT_func_init()
   lv_disp_t * disp;
   disp = lv_disp_drv_register(&disp_drv); /*Register the driver and save the created display objects*/
   //涂上黑色背景，注意是16色
-  lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(0x000000), LV_PART_MAIN);//背景涂黑
-  animation_screen=lv_animimg_create(lv_scr_act()); //创建一个animation screen
-  lv_obj_center(animation_screen);
+  
+
+  create_anim_screen();
+  astronaut_img_create();
+  create_arrow_screen();
+  
+  lv_scr_load(animation_page);
 }
 
 
-void astronaut_img_create(void)
-{
-   lv_animimg_set_duration(animation_screen, 25*40);//25*40ms 
-   lv_animimg_set_src(animation_screen, (lv_img_dsc_t **)astronaut_img_list, 25);
-   lv_animimg_set_repeat_count(animation_screen, 1);
-   lv_animimg_start(animation_screen);
-}
+
 
 void expression_img_create(void)
 {
@@ -101,15 +256,32 @@ void expression_img_create(void)
 }
 
 void TFT_usualExpression(){
+  if(previous_face_condition!=0){
+    lv_scr_load(animation_page);
+    previous_face_condition=0;
+  }
   astronaut_img_create();
-  
-  vTaskDelay(1050/portTICK_PERIOD_MS);
-  //static lv_style_t style_move;
-  //lv_style_init(&style_move);
-  //lv_style_set_translate_x(&style_move, -20);
-  //lv_obj_add_style(animation_screen, &style_move, LV_STATE_DEFAULT);
-  //expression_img_create();
-  //vTaskDelay(2000/portTICK_PERIOD_MS);
+  //vTaskDelay(2050/portTICK_PERIOD_MS);
+  //arrow_image_create(random(1,7),random(1,7),random(1,7));
+  vTaskDelay(1000/portTICK_PERIOD_MS);
+
+
+}
+
+void TFT_drawArrow(){
+  if(previous_face_condition!=2){
+    lv_scr_load(arrow_page);
+    
+    if(commands_counter==0){
+      face_condition=previous_face_condition;
+    }else {
+      face_condition=1;
+      
+      previous_face_condition=1;
+    }
+  }
+  arrow_image_create(commands_array[2],commands_array[1],commands_array[0]);
+  vTaskDelay(50/portTICK_PERIOD_MS);
 }
 // void TFT_usual(String switchbehavior,int start_index, int end_index)
 // {

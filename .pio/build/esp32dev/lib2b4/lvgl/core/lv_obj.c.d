@@ -169,8 +169,6 @@
  .pio/libdeps/esp32dev/lvgl/src/core/../extra/libs/gif/../../../../src/lv_api_map.h \
  .pio/libdeps/esp32dev/lvgl/src/core/../extra/libs/gif/../../../../src/../lvgl.h \
  .pio/libdeps/esp32dev/lvgl/src/core/../extra/libs/gif/../../../../src/extra/lv_extra.h \
- .pio/libdeps/esp32dev/lvgl/src/core/../extra/libs/gif/gifdec.h \
- .pio/libdeps/esp32dev/lvgl/src/core/../extra/libs/gif/../../../misc/lv_fs.h \
  .pio/libdeps/esp32dev/lvgl/src/core/../extra/libs/qrcode/lv_qrcode.h \
  .pio/libdeps/esp32dev/lvgl/src/core/../extra/libs/qrcode/../../../lvgl.h \
  .pio/libdeps/esp32dev/lvgl/src/core/../extra/libs/sjpg/lv_sjpg.h \

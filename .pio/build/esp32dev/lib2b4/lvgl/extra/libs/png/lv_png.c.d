@@ -155,8 +155,6 @@
  c:\users\administrator\desktop\esp32_remote_tft_oid\.pio\libdeps\esp32dev\lvgl\src\lv_conf_internal.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/png/../../../../src/extra/libs/gif/lv_gif.h \
  c:\users\administrator\desktop\esp32_remote_tft_oid\.pio\libdeps\esp32dev\lvgl\src\lvgl.h \
- .pio/libdeps/esp32dev/lvgl/src/extra/libs/png/../../../../src/extra/libs/gif/gifdec.h \
- c:\users\administrator\desktop\esp32_remote_tft_oid\.pio\libdeps\esp32dev\lvgl\src\misc\lv_fs.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/png/../../../../src/extra/libs/qrcode/lv_qrcode.h \
  c:\users\administrator\desktop\esp32_remote_tft_oid\.pio\libdeps\esp32dev\lvgl\src\lvgl.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/png/../../../../src/extra/libs/sjpg/lv_sjpg.h \
@@ -227,6 +225,4 @@
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/png/../../../../src/extra/widgets/imgbtn/lv_imgbtn.h \
  c:\users\administrator\desktop\esp32_remote_tft_oid\.pio\libdeps\esp32dev\lvgl\src\lvgl.h \
  .pio/libdeps/esp32dev/lvgl/src/extra/libs/png/../../../../src/extra/widgets/span/lv_span.h \
- c:\users\administrator\desktop\esp32_remote_tft_oid\.pio\libdeps\esp32dev\lvgl\src\lvgl.h \
- .pio/libdeps/esp32dev/lvgl/src/extra/libs/png/lv_png.h \
- .pio/libdeps/esp32dev/lvgl/src/extra/libs/png/lodepng.h
+ c:\users\administrator\desktop\esp32_remote_tft_oid\.pio\libdeps\esp32dev\lvgl\src\lvgl.h
